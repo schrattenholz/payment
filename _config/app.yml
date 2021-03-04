@@ -1,0 +1,22 @@
+---
+Name: Payment
+After: "*"
+---
+Schrattenholz\Delivery\DeliveryAdmin:
+  extensions:
+    - Schrattenholz\Payment\Payment_DeliveryAdmin_Extension
+Schrattenholz\Delivery\DeliveryType:
+  extensions:
+    - Schrattenholz\Payment\Payment_DeliveryType_Extension
+SilverStripe\CMS\Controllers\ContentController:
+  extensions:
+    - Schrattenholz\Payment\Payment_Order_Extension
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    - Schrattenholz\Payment\Payment_Order_Extension
+Schrattenholz\OrderProfileFeature\OrderProfileFeature_Basket:
+  extensions:
+    - Schrattenholz\Payment\Payment_OrderProfileFeature_ClientOrder_Extension
+Schrattenholz\OrderProfileFeature\OrderProfileFeature_ClientOrder:
+  extensions:
+    - Schrattenholz\Payment\Payment_OrderProfileFeature_ClientOrder_Extension
