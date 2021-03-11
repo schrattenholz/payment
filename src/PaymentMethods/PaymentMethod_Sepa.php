@@ -5,10 +5,7 @@ namespace Schrattenholz\Payment;
 class PaymentMethod_SEPA extends PaymentMethod
 {
 	private static $db = array (
-		'IBAN'=>'Varchar(255)',
-		'BIC'=>'HTMLText',
-		'Name'=>'Text',
-		'SortOrder'=>'Int'
+		'PublicKey'=>'Text'
 	);
 	
 	 public function canView($member = null) 
