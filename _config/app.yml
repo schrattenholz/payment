@@ -20,3 +20,9 @@ Schrattenholz\OrderProfileFeature\OrderProfileFeature_Basket:
 Schrattenholz\OrderProfileFeature\OrderProfileFeature_ClientOrder:
   extensions:
     - Schrattenholz\Payment\Payment_OrderProfileFeature_ClientOrder_Extension
+SilverStripe\Security\Member:
+  extensions:
+    - Schrattenholz\Payment\PaymentMethod_SEPA_Member_Extension
+Schrattenholz\Order\OrderConfig:
+  extensions:
+    - Schrattenholz\Payment\Payment_OrderConfig_Extension
