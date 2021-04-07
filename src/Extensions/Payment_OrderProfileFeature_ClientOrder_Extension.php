@@ -28,7 +28,7 @@ use SilverStripe\Forms\DropdownField;
 
 class Payment_OrderProfileFeature_ClientOrder_Extension extends DataExtension {
 	private static $db=[
-		"SEPA_Confirmation"=>"Boolean"
+		"SEPA_Confirmation"=>"Boolean",
 	];
 	private static $has_one=[
 		"PaymentMethod"=>PaymentMethod::class,

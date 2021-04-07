@@ -47,22 +47,31 @@ private static $allowed_actions = array (
 		$order->SEPA_Confirmation=$basket->SEPA_Confirmation;
 	}
 	public function setCheckoutDelivery_SaveToBasket($vars){
+		$returnValues=new ArrayList(['Status'=>'error','Message'=>false,'Value'=>false]);
 		$basket=$vars->Basket;
 		$data=$vars->Data;
-		if($data->SEPA_Confirmation=="on"){
-			$basket->SEPA_Confirmation=true;
-			$basket->PaymentMethodID="2";
+		$returnValues=$vars->ReturnValues;
+		$basket->PaymentMethodID=$data->PaymentMethodID;
+		$paymentMethod=PaymentMethod::get()->byID($data->PaymentMethodID);
+		Injector::inst()->get(LoggerInterface::class)->error('Payment_Order_Extension validatePayment:'.$paymentMethod->validatePayment($basket,$data));
+		$validationMessage=$paymentMethod->validatePayment($basket,$data);
+		if($validationMessage=="good"){
+			
+			$basket=$paymentMethod->SaveToBasket($basket,$data);
 		}else{
-			$basket->SEPA_Confirmation=false;
-			$basket->PaymentMethodID="1";
+			Injector::inst()->get(LoggerInterface::class)->error('Payment_Order_Extension validatePayment FEhler:'.$paymentMethod->validatePayment($basket,$data));
+			$returnValues->Status="error";
+			$returnValues->Message=$validationMessage;
+			$returnValues->Value='';
+
 		}
-		
 	}
 	public function getPaymentMethods($data){
 		$deliveryTypeID=$data['deliveryTypeID'];
 		$paymentMethodID=$data['paymentMethodID'];
-
-		$data=new ArrayData(['DeliveryTypeID'=>$deliveryTypeID,'PaymentMethodID'=>$paymentMethodID]);
+		$checkoutAddress=$this->owner->getCheckoutAddress();
+		$data=new ArrayData(['DeliveryTypeID'=>$deliveryTypeID,'PaymentMethodID'=>$paymentMethodID,'CheckoutAddress'=>$checkoutAddress]);
+		
 		return $this->owner->customise($data)->renderWith(ThemeResourceLoader::inst()->findTemplate(
 				"Schrattenholz\\Payment\\Payment",
 				SSViewer::config()->uninherited('themes')

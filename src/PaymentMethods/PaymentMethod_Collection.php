@@ -30,5 +30,8 @@ class PaymentMethod_Collection extends PaymentMethod
     {
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
+	public function SaveToBasket($basket,$data){
+		return $basket;
+	}
 }
 ?>
