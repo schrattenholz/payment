@@ -61,12 +61,12 @@ class PaymentMethod_SEPA extends PaymentMethod
 		}
 		if($this->makeHint($data->IBAN,"XXXXXXXXXX",4,6)!=$basket->ClientContainer->IBAN_Hint){
 			//IBAN wird gespeichert, bzw atualisiert
-			$clientContainer->IBAN=$data->IBAN;
+			$clientContainer->IBAN=$this->encryptData($data->IBAN);
 			$clientContainer->IBAN_Hint=$this->makeHint($data->IBAN,"XXXXXXXXXX",4,6);
 			
 			if(isset($member)){
 				Injector::inst()->get(LoggerInterface::class)->error('IBAN in Profil speichern? ');
-				$member->IBAN=$data->IBAN;
+				$member->IBAN=$this->encryptData($data->IBAN);
 				$member->IBAN_Hint=$this->makeHint($data->IBAN,"XXXXXXXXXX",4,6);
 			}
 		}
@@ -187,7 +187,34 @@ class PaymentMethod_SEPA extends PaymentMethod
 		openssl_public_encrypt($data,$encrypted_data,OrderConfig::get()->First()->PublicKey);
 		return $encrypted_data;
 	}
+	private function encryptData($data){
+				Injector::inst()->get(LoggerInterface::class)->error('----generateRSA'.__DIR__.DIRECTORY_SEPARATOR);
+		$config = array(
+			"digest_alg" => "sha512",
+			"private_key_bits" => 4096,
+			"private_key_type" => OPENSSL_KEYTYPE_RSA,
+		);
+		//$res = openssl_pkey_new($config);
+		//openssl_pkey_export($res, $privKey);
+		//openssl_pkey_export_to_file($res,$_SERVER["DOCUMENT_ROOT"]."/privateKey.pem");
+		//$privKey=file_get_contents($_SERVER["DOCUMENT_ROOT"]."/privateKey.pem");  
+		//$pubKey = openssl_pkey_get_details($res);
+		//$pubKey = $pubKey["key"];
+		//$privKey=openssl_pkey_get_private("file//privateKey.pem");
+		//$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."privateKey.pem"; //absolute path
+		//$privKey=openssl_pkey_get_private(openssl_pkey_get_private($keyfile));
+		//$pubKey= openssl_pkey_get_details(openssl_pkey_get_private($keyfile))['key'];
+		
+		/*
+		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."public-key.pem"; //absolute path
+		$pubKey = openssl_pkey_get_details(openssl_pkey_get_public($keyfile))['key'];
 
+		openssl_public_encrypt('this was encrypted with the public key', $secret, $pubKey);
+		openssl_private_decrypt($secret, $decrypted, $privKey);
+		
+		*/
+		return $data;
+	}
 }
 class PaymentMethod_SEPA_Member_Extension extends DataExtension {
 	private static $db=[
