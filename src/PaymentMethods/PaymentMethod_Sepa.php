@@ -27,8 +27,9 @@ use SilverStripe\Assets\File;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 class PaymentMethod_SEPA extends PaymentMethod
 {
-	private static $has_one = array (
-		'PublicKey'=>File::class
+	private static $db = array (
+		'PublicKey'=>"Text",
+		'PrivateKey'=>"Text"
 	);
 	private static $singular_name="SEPA-Lastschrift";
 	private static $plural_name="SEPA-Lastschrift";
@@ -38,13 +39,13 @@ class PaymentMethod_SEPA extends PaymentMethod
 		'Content'=>'Wir ziehen unsere Rechnung im Lastschriftverfahren von Deinem Konto ein.',
 		'Template'=>'Schrattenholz\\Payment\\Templates\\PaymentMethod_SEPA'
     ];
-	public function getCMSFields(){
+	/*public function getCMSFields(){
 		$fields=parent::getCMSFields();
 		$publicKey=UploadField::create("PublicKey","Öffentlicher Schlüssel");
 		$publicKey->setAllowedExtensions(array("pem"));
 		$fields->addFieldToTab("Root.Main",$publicKey);
 		return $fields;
-	}
+	}*/
 	public function HasAdditinoalFields(){
 		return true;
 	}
@@ -58,27 +59,35 @@ class PaymentMethod_SEPA extends PaymentMethod
 			));
 		//return $paginatedProducts;
 	}
+	public function EmailToOwner($emailToOwner,$checkoutAddress){
+		Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod_Sepa.php EmailToOwner ');
+		$emailToOwner->addAttachmentFromData($checkoutAddress->SEPA,"sepa_b64.vcf","text/vcard");
+		//$emailToOwner->addAttachmentFromData("TESTDATA");
+		return $emailToOwner;
+	}
 	public function SaveToBasket($basket,$data){
 		
 		$basket->SEPA_Confirmation=true;
 		$clientContainer=OrderProfileFeature_ClientContainer::get()->byID($basket->ClientContainerID);
-		
+		$sepa_changed=false;;
 		if(isset($data->SAVE_SEPA) && $data->SAVE_SEPA=="on" && $basket->ClientContainer()->ClientID){
 			Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod SEPA SaveToBasket Kontodaten in Profil speichern? '. $data->SAVE_SEPA);
 			$member=Member::get()->byID($basket->ClientContainer()->ClientID);
 		}
 		if($this->makeHint($data->IBAN,"XXXXXXXXXX",4,6)!=$basket->ClientContainer->IBAN_Hint){
+			$sepa_changed=true;
 			//IBAN wird gespeichert, bzw atualisiert
-			$clientContainer->IBAN=$this->encryptData($data->IBAN);
+			//$clientContainer->IBAN=$this->encryptData($data->IBAN);
 			$clientContainer->IBAN_Hint=$this->makeHint($data->IBAN,"XXXXXXXXXX",4,6);
 			
 			if(isset($member)){
 				Injector::inst()->get(LoggerInterface::class)->error('IBAN in Profil speichern? ');
-				$member->IBAN=$this->encryptData($data->IBAN);
+				//$member->IBAN=$this->encryptData("BEGIN:VCARD\nX-BANK-IBAN-NUMBER:".$data->IBAN."\nX-BANK-SWIFT-NUMBER:".$data->BIC);
 				$member->IBAN_Hint=$this->makeHint($data->IBAN,"XXXXXXXXXX",4,6);
 			}
 		}
 		if($this->makeHint($data->BIC,"XXXXXXX",2,4)!=$basket->ClientContainer->BIC_Hint){
+			$sepa_changed=true;
 			//BIC wird gespeichert, bzw atualisiert
 			$clientContainer->BIC=$data->BIC;
 			$clientContainer->BIC_Hint=$this->makeHint($data->BIC,"XXXXXXX",2,4);
@@ -88,11 +97,15 @@ class PaymentMethod_SEPA extends PaymentMethod
 				$member->BIC_Hint=$this->makeHint($data->BIC,"XXXXXXX",2,4);
 			}
 		}
-		$clientContainer->write();
-		if(isset($member)){
-			$member->write();
+		if($sepa_changed==true){
+			$sepaData=$this->encryptData("BEGIN:VCARD\nX-BANK-IBAN-NUMBER:".$data->IBAN."\nX-BANK-SWIFT-NUMBER:".$data->BIC."\nEND:VCARD");
+			$clientContainer->SEPA=$this->encryptData("BEGIN:VCARD\nX-BANK-IBAN-NUMBER:".$data->IBAN."\nX-BANK-SWIFT-NUMBER:".$data->BIC."\nEND:VCARD");
+			$clientContainer->write();
+			if(isset($member)){
+				$member->SEPA=$sepaData;
+				$member->write();
+			}
 		}
-		
 		return $basket;
 	}
 	private function makeHint($str,$replacement,$start,$end){
@@ -189,39 +202,43 @@ class PaymentMethod_SEPA extends PaymentMethod
     {
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
-		private function generateRSA($data){
-		Injector::inst()->get(LoggerInterface::class)->error('----generateRSA'.OrderConfig::get()->First()->PublicKey);
-		$encrypted_data="";
-		openssl_public_encrypt($data,$encrypted_data,OrderConfig::get()->First()->PublicKey);
-		return $encrypted_data;
-	}
 	private function encryptData($data){
-		Injector::inst()->get(LoggerInterface::class)->error('----encryptData'.$data);
+		
 		$config = array(
 			"digest_alg" => "sha512",
-			"private_key_bits" => 4096,
+			"private_key_bits" => 2048,
 			"private_key_type" => OPENSSL_KEYTYPE_RSA,
 		);
 		//ENCRYPT
-		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."public-key.pem"; //absolute path
+		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem"; //absolute path
+		Injector::inst()->get(LoggerInterface::class)->error('----encryptData'.$keyfile);
 		$pubKey = openssl_pkey_get_details(openssl_pkey_get_public($keyfile))['key'];
 		openssl_public_encrypt($data, $secret, $pubKey);
-		/*
+		
 		//DECRYPT
-		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."privateKey.pem"; //absolute path
+		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."solaPrvKey.pem"; //absolute path
 		$privKey=openssl_pkey_get_private(openssl_pkey_get_private($keyfile));
 		openssl_private_decrypt($secret, $decrypted, $privKey);
 		Injector::inst()->get(LoggerInterface::class)->error('----pubKey= '.$decrypted);
-		*/
-		return base64_encode($secret);
+		
+		return $this->base64_encode_linebreak($secret);
 	}
+	function base64_encode_linebreak($data) {
+		$data = base64_encode($data);
+		$datalb = "";
+		while (strlen($data) > 64) {
+			$datalb .= substr($data, 0, 64) . "\n";
+			$data = substr($data,64);
+		}
+		$datalb .= $data;
+		return $datalb;
+	} 
 }
 class PaymentMethod_SEPA_Member_Extension extends DataExtension {
 	private static $db=[
-		"IBAN"=>"Text",
+		"SEPA"=>"Text",
 		"IBAN_Hint"=>"Varchar(50)",
 		"IBAN_Hash"=>"Text",
-		"BIC"=>"Text",
 		"BIC_Hint"=>"Varchar(20)",
 		"BIC_HASH"=>"Text"
 	];
@@ -239,7 +256,14 @@ class PaymentMethod_SEPA_Member_Extension extends DataExtension {
 		}
 		parent::onBeforeWrite();
 	}
-
-
+}
+class PaymentMethod_SEPA_ClientContainer_Extension extends DataExtension {
+	private static $db=[
+		"SEPA"=>"Text",
+		"IBAN_Hint"=>"Varchar(50)",
+		"IBAN_Hash"=>"Text",
+		"BIC_Hint"=>"Varchar(20)",
+		"BIC_HASH"=>"Text"
+	];
 }
 ?>

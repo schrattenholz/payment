@@ -16,7 +16,7 @@ SilverStripe\CMS\Model\SiteTree:
     - Schrattenholz\Payment\Payment_Order_Extension
 Schrattenholz\OrderProfileFeature\OrderProfileFeature_ClientContainer:
   extensions:
-    - Schrattenholz\Payment\Payment_OrderProfileFeature_ClientContainer_Extension
+    - Schrattenholz\Payment\PaymentMethod_SEPA_ClientContainer_Extension
 Schrattenholz\OrderProfileFeature\OrderProfileFeature_Basket:
   extensions:
     - Schrattenholz\Payment\Payment_OrderProfileFeature_ClientOrder_Extension

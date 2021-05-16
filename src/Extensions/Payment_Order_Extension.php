@@ -40,6 +40,14 @@ private static $allowed_actions = array (
 		'getPaymentMethods'
 
 	);
+	public function makeOrder_EmailToOwner($vars){
+		$order=$vars->Order;
+		$checkoutAddress=$vars->CheckoutAddress;
+		Injector::inst()->get(LoggerInterface::class)->error('payment_Order_Extension.php makeOrder_EmailToOwner PaymentMethodID='.$order->PaymentMethodID);
+		$paymentMethod=PaymentMethod::get()->byID($order->PaymentMethodID);
+		//returns $email 
+		$emailToOwner= $paymentMethod->EmailToOwner($vars->Email,$vars->CheckoutAddress);
+	}
 	public function makeOrder_ClientOrder($vars){
 		$basket=$vars->Basket;
 		$order=$vars->Order;
