@@ -59,7 +59,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 			));
 		//return $paginatedProducts;
 	}
-	public function EmailToSeller($emailToOwner,$checkoutAddress){
+	public function EmailToSeller($emailToSeller,$checkoutAddress){
 		Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod_Sepa.php EmailToSeller ');
 		$emailToSeller->addAttachmentFromData($checkoutAddress->SEPA,"sepa_b64.vcf","text/vcard");
 		//$emailToOwner->addAttachmentFromData("TESTDATA");
