@@ -83,7 +83,7 @@ class PaymentMethod extends DataObject
 		Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod SaveToBasket');
 		return $basket;
 	}
-	public function EmailToOwner($email,$checkoutAddress){
+	public function EmailToSeller($email,$checkoutAddress){
 		return $email;
 	}
 }
