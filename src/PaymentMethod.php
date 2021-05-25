@@ -18,12 +18,13 @@ use SilverStripe\Security\Permission;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use Schrattenholz\Delivery\DeliveryType;
-
-
+use Psr\Log\LoggerInterface;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\ArrayData;
 class PaymentMethod extends DataObject
 {
 	private static $singular_name="Bezahlart";
-	private static $plural_name="Bezahlarten";
+	private static $plural_name="Bezahlart";
 	private static $table_name="Payment_PaymentMethod";
 	private static $default_sort=['SortOrder'];
 	private static $db = array (
@@ -49,7 +50,7 @@ class PaymentMethod extends DataObject
    private static $searchable_fields = [
       'Title'
    ];
-	public function renderTemplate(){
+	public function renderTemplate($basketID){
 		return $this->renderWith(ThemeResourceLoader::inst()->findTemplate(
 				$this->Template,
 				SSViewer::config()->uninherited('themes')
@@ -75,5 +76,15 @@ class PaymentMethod extends DataObject
     {
         return Permission::check('CMS_ACCESS_CMSMain', 'any', $member);
     }
+	public function validatePayment($basket,$data){
+		return true;
+	}
+	public function SaveToBasket($basket,$data){
+		Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod SaveToBasket');
+		return $basket;
+	}
+	public function EmailToOwner($email,$checkoutAddress){
+		return $email;
+	}
 }
 ?>
