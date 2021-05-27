@@ -52,7 +52,21 @@ class PaymentMethod_SEPA extends PaymentMethod
 	public function renderTemplate($basketID){
 		$basket=OrderProfileFeature_Basket::get()->byID($basketID);
 		$clientContainer=OrderProfileFeature_ClientContainer::get()->byID($basket->ClientContainerID);
-		$data=new ArrayData(['IBAN_Hint'=>$clientContainer->IBAN_Hint,'BIC_Hint'=>$clientContainer->BIC_Hint]);
+		// Wenn der Benutzer ein Benutzerkonto hat: Nach hinterlegten SEPA-Daten suchen
+		$member=Member::get()->byID($clientContainer->ClientID);
+		$save_sepa=false;
+		if(isset($member)){
+				Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod SEPA renderTemplate Member SEPA holen und in ClientContainer speichern? member->SEPA='.$member->SEPA);
+				$clientContainer->IBAN_Hint=$member->IBAN_Hint;
+				$clientContainer->BIC_Hint=$member->BIC_Hint;
+				$clientContainer->SEPA=$member->SEPA;
+				$save_sepa=true;
+				$clientContainer->write();
+		}
+		if(isset($data->SAVE_SEPA) && $data->SAVE_SEPA=="on"){
+			$save_sepa=true;
+		}
+		$data=new ArrayData(['IBAN_Hint'=>$clientContainer->IBAN_Hint,'BIC_Hint'=>$clientContainer->BIC_Hint,'SAVE_SEPA'=>$save_sepa]);
 		return $this->customise($data)->renderWith(ThemeResourceLoader::inst()->findTemplate(
 				$this->Template,
 				SSViewer::config()->uninherited('themes')
