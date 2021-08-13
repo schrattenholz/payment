@@ -261,6 +261,15 @@ class PaymentMethod_SEPA_Member_Extension extends DataExtension {
 		$iban->setRows(5);
 		$fields->addFieldToTab("Root.Bezahlung",$iban);
 	  }
+	public function onBeforeWrite(){
+		$iban=Member::get()->byID($this->owner->ID)->IBAN;
+		//Injector::inst()->get(LoggerInterface::class)->error("field=".$this->owner->getField("IBAN").'----onBeforeWrite  db='.$iban);
+		if($this->owner->getField("IBAN")!=$iban){
+				//$this->owner->setField("IBAN",$this->generateRSA($this->owner->getField("IBAN")));
+			
+		}
+		parent::onBeforeWrite();
+	}
 }
 class PaymentMethod_SEPA_ClientContainer_Extension extends DataExtension {
 	private static $db=[
