@@ -16,3 +16,4 @@ function loadPaymentMethods(deliveryTypeID,paymentMethodID){
 		}
 	});
 }
+function setPaymentMethodID(id){$('#PaymentMethodID').val(id);}
