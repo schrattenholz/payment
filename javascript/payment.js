@@ -16,4 +16,19 @@ function loadPaymentMethods(deliveryTypeID,paymentMethodID){
 		}
 	});
 }
-function setPaymentMethodID(id){$('#PaymentMethodID').val(id);}
+function setPaymentMethodID(id){
+	
+	$('#PaymentMethodID').val(id);
+	$('#paymenMethods input').each(function(){
+		console.log("sd");
+		$(this).removeAttr("required");
+		});
+	
+		$('#pM_'+id+' input').each(function(){
+			console.log("gefunden");
+			if($(this).attr("attr-required")=="true"){
+				$(this).attr("required","required");
+			}
+			
+		});
+	}
