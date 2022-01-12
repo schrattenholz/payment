@@ -40,13 +40,13 @@ private static $allowed_actions = array (
 		'getPaymentMethods'
 
 	);
-	public function makeOrder_EmailToOwner($vars){
+	public function makeOrder_EmailToSeller($vars){
 		$order=$vars->Order;
 		$checkoutAddress=$vars->CheckoutAddress;
 		Injector::inst()->get(LoggerInterface::class)->error('payment_Order_Extension.php makeOrder_EmailToOwner PaymentMethodID='.$order->PaymentMethodID);
 		$paymentMethod=PaymentMethod::get()->byID($order->PaymentMethodID);
 		//returns $email 
-		$emailToOwner= $paymentMethod->EmailToOwner($vars->Email,$vars->CheckoutAddress);
+		$emailToSeller= $paymentMethod->EmailToSeller($vars->Email,$vars->CheckoutAddress);
 	}
 	public function makeOrder_ClientOrder($vars){
 		$basket=$vars->Basket;
@@ -64,7 +64,6 @@ private static $allowed_actions = array (
 		Injector::inst()->get(LoggerInterface::class)->error('Payment_Order_Extension validatePayment:'.$paymentMethod->validatePayment($basket,$data));
 		$validationMessage=$paymentMethod->validatePayment($basket,$data);
 		if($validationMessage=="good"){
-			
 			$basket=$paymentMethod->SaveToBasket($basket,$data);
 		}else{
 			Injector::inst()->get(LoggerInterface::class)->error('Payment_Order_Extension validatePayment FEhler:'.$paymentMethod->validatePayment($basket,$data));
