@@ -64,7 +64,6 @@ private static $allowed_actions = array (
 		Injector::inst()->get(LoggerInterface::class)->error('Payment_Order_Extension validatePayment:'.$paymentMethod->validatePayment($basket,$data));
 		$validationMessage=$paymentMethod->validatePayment($basket,$data);
 		if($validationMessage=="good"){
-			
 			$basket=$paymentMethod->SaveToBasket($basket,$data);
 		}else{
 			Injector::inst()->get(LoggerInterface::class)->error('Payment_Order_Extension validatePayment FEhler:'.$paymentMethod->validatePayment($basket,$data));
