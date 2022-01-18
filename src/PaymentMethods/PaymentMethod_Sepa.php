@@ -75,7 +75,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 	}
 	public function EmailToSeller($emailToSeller,$checkoutAddress){
 		Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod_Sepa.php EmailToSeller ');
-		$emailToSeller->addAttachmentFromData($checkoutAddress->SEPA,"sepa_b64.vcf","text/vcard");
+		$emailToSeller->addAttachmentFromData($checkoutAddress->SEPA,"sepa_b64.txt","text/vcard");
 		//$emailToOwner->addAttachmentFromData("TESTDATA");
 		return $emailToSeller;
 	}
@@ -225,7 +225,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 		);
 		//ENCRYPT
 		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem"; //absolute path
-		Injector::inst()->get(LoggerInterface::class)->error('----encryptData'.$keyfile);
+		Injector::inst()->get(LoggerInterface::class)->error('----encryptData'.$keyfile.' pfad='."file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem");
 		$pubKey = openssl_pkey_get_details(openssl_pkey_get_public($keyfile))['key'];
 		openssl_public_encrypt($data, $secret, $pubKey);
 		
