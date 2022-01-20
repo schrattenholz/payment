@@ -225,8 +225,8 @@ class PaymentMethod_SEPA extends PaymentMethod
 		);
 		//ENCRYPT
 		$keyfile="file://".dirname(__DIR__,5).DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."sepaPubKey.pem"; //absolute path
-		//Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem");
-		//Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".dirname(__DIR__,5).DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."sepaPubKey.pem");
+		Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem");
+		Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".dirname(__DIR__,5).DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."sepaPubKey.pem");
 		$pubKey = openssl_pkey_get_details(openssl_pkey_get_public($keyfile))['key'];
 		openssl_public_encrypt($data, $secret, $pubKey);
 		
