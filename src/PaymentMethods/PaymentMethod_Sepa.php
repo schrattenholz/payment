@@ -224,13 +224,13 @@ class PaymentMethod_SEPA extends PaymentMethod
 			"private_key_type" => OPENSSL_KEYTYPE_RSA,
 		);
 		//ENCRYPT
-		$keyfile="file://".dirname(__DIR__,4).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR."sepaPubKey.pem"; //absolute pathvhjmghj
-		Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".dirname(__DIR__,4).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR."solaPubKey.pem");
+		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem"; //absolute path
+		Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".dirname(__DIR__,5).DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."sepaPubKey.pem");
 		$pubKey = openssl_pkey_get_details(openssl_pkey_get_public($keyfile))['key'];
 		openssl_public_encrypt($data, $secret, $pubKey);
 		
 		//DECRYPT
-		$keyfile="file://".dirname(__DIR__,4).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR."sepaPrvKey.pem"; //absolute path
+		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."solaPrvKey.pem"; //absolute path
 		$privKey=openssl_pkey_get_private(openssl_pkey_get_private($keyfile));
 		openssl_private_decrypt($secret, $decrypted, $privKey);
 		Injector::inst()->get(LoggerInterface::class)->error('----pubKey= '.$decrypted);
