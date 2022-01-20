@@ -223,7 +223,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 			"private_key_bits" => 2048,
 			"private_key_type" => OPENSSL_KEYTYPE_RSA,
 		);
-		//ENCRYPT
+		//ENCRYPT 
 		$keyfile="file://".dirname(__DIR__,5).DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."sepaPubKey.pem"; //absolute path
 		Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".__DIR__.DIRECTORY_SEPARATOR."solaPubKey.pem");
 		Injector::inst()->get(LoggerInterface::class)->error('pfad='."file://".dirname(__DIR__,5).DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."sepaPubKey.pem");
