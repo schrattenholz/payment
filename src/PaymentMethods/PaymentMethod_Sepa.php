@@ -231,11 +231,12 @@ class PaymentMethod_SEPA extends PaymentMethod
 		openssl_public_encrypt($data, $secret, $pubKey);
 		
 		//DECRYPT
+		/*
 		$keyfile="file://".__DIR__.DIRECTORY_SEPARATOR."solaPrvKey.pem"; //absolute path
 		$privKey=openssl_pkey_get_private(openssl_pkey_get_private($keyfile));
 		openssl_private_decrypt($secret, $decrypted, $privKey);
 		Injector::inst()->get(LoggerInterface::class)->error('----pubKey= '.$decrypted);
-		
+		*/
 		return $this->base64_encode_linebreak($secret);
 	}
 	function base64_encode_linebreak($data) {
