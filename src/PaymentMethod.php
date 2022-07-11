@@ -21,6 +21,10 @@ use Schrattenholz\Delivery\DeliveryType;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\ArrayData;
+
+use Schrattenholz\OrderProfileFeature\OrderCustomerGroup;
+
+
 class PaymentMethod extends DataObject
 {
 	private static $singular_name="Bezahlart";
@@ -43,6 +47,9 @@ class PaymentMethod extends DataObject
 	];*/
 	private static $belongs_many_many=[
 		'DeliveryTypes'=>DeliveryType::class,
+	];
+	private static $many_many=[
+		"OrderCustomerGroups"=>OrderCustomerGroup::class
 	];
 	private static $summary_fields = [
 		'Title' => 'Paymentmethode'

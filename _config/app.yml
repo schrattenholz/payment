@@ -29,3 +29,6 @@ SilverStripe\Security\Member:
 Schrattenholz\Order\OrderConfig:
   extensions:
     - Schrattenholz\Payment\Payment_OrderConfig_Extension
+Schrattenholz\OrderProfileFeature\OrderCustomerGroup:
+  extensions:
+    - Schrattenholz\Payment\Payment_OrderProfileFeature_OrderCostumerGroup_Extension

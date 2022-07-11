@@ -52,6 +52,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 	public function renderTemplate($basketID){
 		$basket=OrderProfileFeature_Basket::get()->byID($basketID);
 		$clientContainer=OrderProfileFeature_ClientContainer::get()->byID($basket->ClientContainerID);
+		Injector::inst()->get(LoggerInterface::class)->error('ClientContainerID='.$basket->ClientContainerID);
 		// Wenn der Benutzer ein Benutzerkonto hat: Nach hinterlegten SEPA-Daten suchen
 		$member=Member::get()->byID($clientContainer->ClientID);
 		$save_sepa=false;

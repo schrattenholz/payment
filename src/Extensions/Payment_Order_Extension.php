@@ -37,16 +37,27 @@ class Payment_Order_Extension extends DataExtension{
 
 private static $allowed_actions = array (
 		'RelatedPaymentMethods',
-		'getPaymentMethods'
+		'getPaymentMethods',
+		'PaymentIsActive'
 
 	);
+	public function PaymentIsActive(){		
+		$ocg=$this->owner->CurrentOrderCustomerGroup();
+		if($ocg->PaymentMethods()->Count>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	public function makeOrder_EmailToSeller($vars){
 		$order=$vars->Order;
 		$checkoutAddress=$vars->CheckoutAddress;
 		Injector::inst()->get(LoggerInterface::class)->error('payment_Order_Extension.php makeOrder_EmailToOwner PaymentMethodID='.$order->PaymentMethodID);
 		$paymentMethod=PaymentMethod::get()->byID($order->PaymentMethodID);
 		//returns $email 
-		$emailToSeller= $paymentMethod->EmailToSeller($vars->Email,$vars->CheckoutAddress);
+		if($paymentMethod){
+			$emailToSeller= $paymentMethod->EmailToSeller($vars->Email,$vars->CheckoutAddress);
+		}
 	}
 	public function makeOrder_ClientOrder($vars){
 		$basket=$vars->Basket;
