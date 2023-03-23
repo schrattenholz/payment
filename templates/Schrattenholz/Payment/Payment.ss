@@ -1,5 +1,5 @@
-	 <div class="col mb-4 card">
-		<div class="card-header">
+	 <div class="col mb-4 ">
+		<div class="card-header  border-bottom-0">
 			<h3 class="accordion-heading">Zahlungsoptionen <span class="accordion-indicator"></span></h3>
 		</div>
 		<div class="accordion mb-4" id="paymenMethods">
