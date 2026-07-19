@@ -89,7 +89,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 			Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod SEPA SaveToBasket Kontodaten in Profil speichern? '. $data->SAVE_SEPA);
 			$member=Member::get()->byID($basket->ClientContainer()->ClientID);
 		}
-		if($this->makeHint($data->IBAN,"XXXXXXXXXX",4,6)!=$basket->ClientContainer->IBAN_Hint){
+		if($this->makeHint($data->IBAN,"XXXXXXXXXX",4,6)!=$basket->ClientContainer()->IBAN_Hint){
 			$sepa_changed=true;
 			//IBAN wird gespeichert, bzw atualisiert
 			//$clientContainer->IBAN=$this->encryptData($data->IBAN);
@@ -101,7 +101,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 				$member->IBAN_Hint=$this->makeHint($data->IBAN,"XXXXXXXXXX",4,6);
 			}
 		}
-		if($this->makeHint($data->BIC,"XXXXXXX",2,4)!=$basket->ClientContainer->BIC_Hint){
+		if($this->makeHint($data->BIC,"XXXXXXX",2,4)!=$basket->ClientContainer()->BIC_Hint){
 			$sepa_changed=true;
 			//BIC wird gespeichert, bzw atualisiert
 			$clientContainer->BIC=$data->BIC;
@@ -129,7 +129,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 	}
 	public function validatePayment($basket,$data){
 		//Injector::inst()->get(LoggerInterface::class)->error('PaymentMethod SEPA validatePayment verify: '.$this->verifyIBAN($data->IBAN));
-		if($data->IBAN==$basket->ClientContainer->IBAN_Hint){
+		if($data->IBAN==$basket->ClientContainer()->IBAN_Hint){
 			//IBAN ist bereits gespeichert
 		}else{
 			//IBAN ist nicht gespeichert, bzw. wurder geaendert
@@ -137,7 +137,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 				return "Bitte überprüfe die eingegebene IBAN";
 			}
 		}
-		if($data->BIC==$basket->ClientContainer->BIC_Hint){
+		if($data->BIC==$basket->ClientContainer()->BIC_Hint){
 			//BIC ist bereits gespeichert
 		}else{
 			//BIC ist nicht gespeichert, bzw. wurde geaendert

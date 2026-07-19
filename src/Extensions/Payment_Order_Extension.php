@@ -43,7 +43,7 @@ private static $allowed_actions = array (
 	);
 	public function PaymentIsActive(){		
 		$ocg=$this->owner->CurrentOrderCustomerGroup();
-		if($ocg->PaymentMethods()->Count>0){
+		if($ocg->PaymentMethods()->Count()>0){
 			return true;
 		}else{
 			return false;
