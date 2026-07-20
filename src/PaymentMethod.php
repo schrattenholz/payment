@@ -30,7 +30,7 @@ class PaymentMethod extends DataObject
 	private static $singular_name="Bezahlart";
 	private static $plural_name="Bezahlart";
 	private static $table_name="Payment_PaymentMethod";
-	private static $default_sort=['SortOrder'];
+	private static $default_sort='SortOrder';
 	private static $db = array (
 		'Title'=>'Varchar(255)',
 		'Content'=>'HTMLText',
