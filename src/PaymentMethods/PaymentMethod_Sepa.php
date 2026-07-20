@@ -266,9 +266,8 @@ class PaymentMethod_SEPA_Member_Extension extends Extension {
 		//Injector::inst()->get(LoggerInterface::class)->error("field=".$this->owner->getField("IBAN").'----onBeforeWrite  db='.$iban);
 		//if($this->owner->getField("IBAN")!=$iban){
 				//$this->owner->setField("IBAN",$this->generateRSA($this->owner->getField("IBAN")));
-			
+
 		//}
-		parent::onBeforeWrite();
 	}
 }
 class PaymentMethod_SEPA_ClientContainer_Extension extends Extension {
