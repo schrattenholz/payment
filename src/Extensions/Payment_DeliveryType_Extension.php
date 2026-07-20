@@ -3,7 +3,7 @@
 namespace Schrattenholz\Payment;
 
 
-use Silverstripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\Queries\SQLUpdate;
@@ -11,7 +11,7 @@ use Kinglozzer\MultiSelectField\Forms\MultiSelectField;
 use SilverStripe\Core\Injector\Injector;
 use Psr\Log\LoggerInterface;
 
-class Payment_DeliveryType_Extension extends DataExtension {
+class Payment_DeliveryType_Extension extends Extension {
 	private static $many_many=[
 		"PaymentMethods"=>PaymentMethod::class
 	];

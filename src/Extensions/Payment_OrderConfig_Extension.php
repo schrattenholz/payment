@@ -1,12 +1,12 @@
 <?php
 namespace Schrattenholz\Payment;
 
-use Silverstripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use Schrattenholz\Order\OrderConfig;
 use Schrattenholz\OrderProfileFeature\OrderCustomerGroup;
 use SilverStripe\Forms\FieldList;
-use Silverstripe\Forms\TextareaField;
-class Payment_OrderConfig_Extension extends DataExtension{
+use SilverStripe\Forms\TextareaField;
+class Payment_OrderConfig_Extension extends Extension{
 	private static $db=[
 		'PublicKey'=>'Text'
 	];

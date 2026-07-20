@@ -6,13 +6,13 @@ use Schrattenholz\Order\OrderExtension;
 use Schrattenholz\Order\Product;
 use Schrattenholz\Order\OrderConfig;
 use Schrattenholz\OrderProfileFeature\OrderProfileFeature_Basket;
-use Silverstripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\Security\Security;
-use Silverstripe\Security\Group;
-use Silverstripe\Forms\TextField;
-use Silverstripe\Forms\OptionsetField;
-use Silverstripe\Forms\ConfirmedPasswordField ;
-use Silverstripe\ORM\ArrayList;
+use SilverStripe\Security\Group;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\ConfirmedPasswordField ;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -27,13 +27,13 @@ use SilverStripe\Control\Controller;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\SiteConfig\SiteConfig;
 use Schrattenholz\Order\Preis;
-class Payment_Order_Extension extends DataExtension{
+class Payment_Order_Extension extends Extension{
 
 private static $allowed_actions = array (
 		'RelatedPaymentMethods',
@@ -90,10 +90,7 @@ private static $allowed_actions = array (
 		$checkoutAddress=$this->owner->getCheckoutAddress();
 		$data=new ArrayData(['DeliveryTypeID'=>$deliveryTypeID,'PaymentMethodID'=>$paymentMethodID,'CheckoutAddress'=>$checkoutAddress]);
 		
-		return $this->owner->customise($data)->renderWith(ThemeResourceLoader::inst()->findTemplate(
-				"Schrattenholz\\Payment\\Payment",
-				SSViewer::config()->uninherited('themes')
-			));
+		return $this->owner->customise($data)->renderWith("Schrattenholz\\Payment\\Payment");
 		//return $paginatedProducts;
 	}
 	public function RelatedPaymentMethods($deliveryTypeID=0,$papymentMethodID=0){

@@ -3,11 +3,11 @@
 namespace Schrattenholz\Payment;
 
 
-use Silverstripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
 //Extends OrderProfileFeature_ClientContainer
 
-class Payment_OrderProfileFeature_ClientContainer_Extension extends DataExtension {
+class Payment_OrderProfileFeature_ClientContainer_Extension extends Extension {
 	private static $db=[
 		"IBAN"=>"Text",
 		"IBAN_Hint"=>"Varchar(50)",

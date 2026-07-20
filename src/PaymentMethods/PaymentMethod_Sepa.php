@@ -2,17 +2,17 @@
 
 namespace Schrattenholz\Payment;
 use SilverStripe\Security\Permission;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
-use Silverstripe\Forms\TextareaField;
-use Silverstripe\Forms\EmailField;
-use Silverstripe\Forms\LiteralField;
-use Silverstripe\Forms\CheckboxField;
-use Silverstripe\Forms\ConfirmedPasswordField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\OptionsetField;
 use UndefinedOffset\NoCaptcha\Forms\NocaptchaField;
-use Silverstripe\Security\Group;
+use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Core\Injector\Injector;
 use Psr\Log\LoggerInterface;
@@ -20,7 +20,7 @@ use Schrattenholz\Order\OrderConfig;
 use PHP_IBAN\IBAN;
 use Schrattenholz\OrderProfileFeature\OrderProfileFeature_ClientContainer;
 use Schrattenholz\OrderProfileFeature\OrderProfileFeature_Basket;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\Assets\File;
@@ -68,10 +68,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 			$save_sepa=true;
 		}
 		$data=new ArrayData(['IBAN_Hint'=>$clientContainer->IBAN_Hint,'BIC_Hint'=>$clientContainer->BIC_Hint,'SAVE_SEPA'=>$save_sepa]);
-		return $this->customise($data)->renderWith(ThemeResourceLoader::inst()->findTemplate(
-				$this->Template,
-				SSViewer::config()->uninherited('themes')
-			));
+		return $this->customise($data)->renderWith($this->Template);
 		//return $paginatedProducts;
 	}
 	public function EmailToSeller($emailToSeller,$checkoutAddress){
@@ -251,7 +248,7 @@ class PaymentMethod_SEPA extends PaymentMethod
 		return $datalb;
 	} 
 }
-class PaymentMethod_SEPA_Member_Extension extends DataExtension {
+class PaymentMethod_SEPA_Member_Extension extends Extension {
 	private static $db=[
 		"SEPA"=>"Text",
 		"IBAN_Hint"=>"Varchar(50)",
@@ -274,7 +271,7 @@ class PaymentMethod_SEPA_Member_Extension extends DataExtension {
 		parent::onBeforeWrite();
 	}
 }
-class PaymentMethod_SEPA_ClientContainer_Extension extends DataExtension {
+class PaymentMethod_SEPA_ClientContainer_Extension extends Extension {
 	private static $db=[
 		"SEPA"=>"Text",
 		"IBAN_Hint"=>"Varchar(50)",
