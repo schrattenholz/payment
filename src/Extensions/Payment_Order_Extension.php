@@ -66,7 +66,7 @@ private static $allowed_actions = array (
 		$order->SEPA_Confirmation=$basket->SEPA_Confirmation;
 	}
 	public function setCheckoutDelivery_SaveToBasket($vars){
-		$returnValues=new ArrayList(['Status'=>'error','Message'=>false,'Value'=>false]);
+		$returnValues=new ArrayData(['Status'=>'error','Message'=>false,'Value'=>false]);
 		$basket=$vars->Basket;
 		$data=$vars->Data;
 		$returnValues=$vars->ReturnValues;
