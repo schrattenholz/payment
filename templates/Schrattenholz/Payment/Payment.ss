@@ -13,11 +13,11 @@
 					</a>
 				</h3>
 				</div>
-				<div class="collapse <% if $Top.Basket.PaymentMethodID == $ID || not $Top.Basket.PaymentMethodID && $First %>show<% end_if %>" id="pM_$ID" data-parent="#paymenMethods">
+				<div class="collapse <% if $Top.Basket.PaymentMethodID == $ID || not $Top.Basket.PaymentMethodID && $IsFirst %>show<% end_if %>" id="pM_$ID" data-parent="#paymenMethods">
 				<div class="card-body">
 					<!--
 					<div class="custom-control custom-radio">
-						<input class="custom-control-input" type="radio" id="r_pM_$ID" name="paymentMethod" <% if $First %>checked="checked"<% end_if %>>
+						<input class="custom-control-input" type="radio" id="r_pM_$ID" name="paymentMethod" <% if $IsFirst %>checked="checked"<% end_if %>>
 						<label class="custom-control-label" for="r_pM_$ID">Auswählen</label>
 					</div>
 					-->
